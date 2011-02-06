@@ -11,8 +11,9 @@
 
 (defvar gcode-font-lock-keywords
   (list '("\\<\\([gmtGMT][0-9]\\{2\\}\\)\\>" . font-lock-function-name-face)
-		'("\\<\\([nN][0-9]+\\)\\>" . font-lock-type-face)))
-
+		'("\\<\\([nN][0-9]+\\)\\>" . font-lock-type-face)
+		'("\\<\\([A-Z][+-]?[0-9]+\\(\\.[0-9]+\\)?\\)\\>" . font-lock-keyword-face)
+		))
 
 (defun gcode-comment-dwim (arg)
 "Comment or uncomment current line or region in a smart way.
