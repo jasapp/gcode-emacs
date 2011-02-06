@@ -27,12 +27,25 @@ For detail, see `comment-dwim'."
      (comment-dwim arg)))
 
 (defun remove-line-numbers ()
-  "Remove line numbers"
+  "Remove line numbers."
   (interactive "*")
   (let ((original-point (point)))
 	(goto-char (point-min))
-	(while (re-search-forward "^[nN][0-9]+[ \n\t]+" nil t)
+	(while (re-search-forward "^[nN][0-9]+[ \n\t]" nil t)
 	  (replace-match ""))
+	(goto-char original-point)))
+
+(defun add-line-numbers ( )
+  "Add line numbers."
+  (interactive "*")
+  (remove-line-numbers)
+  (let ((original-point (point))
+		(current-line-count 1))
+	(goto-char (point-min))
+	(while (re-search-forward "^[gmtGMT][0-9]\\{2\\}" nil t)
+	  (beginning-of-line)
+	  (insert (format "N%d " current-line-count))
+	  (setq current-line-count (1+ current-line-count )))
 	(goto-char original-point)))
 
 (defun gcode-mode () 
