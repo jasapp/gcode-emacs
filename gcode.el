@@ -3,17 +3,16 @@
 ;; Author: Jeff Sapp <jasapp@gmail.com>
 ;;
 
-(defconst gcode--gcode-re "[GM][0-9][0-9]")
-
 (defvar gcode-mode-hook nil
   "*List of functions to call when entering GCode mode.*")
 
 (defvar gcode-mode-map nil
   "Keymap for major mode.")
 
-
 (defvar gcode-font-lock-keywords
-  (list '("\\<\\([gmGM][0-9]\\{2\\}\\)\\>" . font-lock-function-name-face)))
+  (list '("\\<\\([gmtGMT][0-9]\\{2\\}\\)\\>" . font-lock-function-name-face)
+		'("\\<\\([nN][0-9]+\\)\\>" . font-lock-type-face)))
+
 
 (defun gcode-comment-dwim (arg)
 "Comment or uncomment current line or region in a smart way.
