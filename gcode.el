@@ -6,10 +6,6 @@
 (defvar gcode-mode-hook nil
   "*List of functions to call when entering GCode mode.*")
 
-(defvar gcode-mode-map nil
-  "Keymap for major mode.")
-
-
 (defvar gcode-font-lock-keywords
   (list '("\\<\\([gmtGMT][0-9]\\{2\\}\\)\\>" . font-lock-function-name-face)
 		'("\\<\\(^[nN][0-9]+\\)\\>" . font-lock-type-face)
@@ -48,15 +44,17 @@ For detail, see `comment-dwim'."
 	  (setq current-line-count (1+ current-line-count )))
 	(goto-char original-point)))
 
-(defun gcode-mode () 
+(define-derived-mode gcode-mode fundamental-mode
   "Major mode for editing gcode."
-  (interactive)
-  (kill-all-local-variables)
-  (text-mode)
+  (setq font-lock-defaults '(gcode-font-lock-keywords))
   (setq major-mode 'gcode-mode)
-  (setq mode-name "Gcode")
-  (set (make-local-variable 'font-lock-defaults) 
-       '(gcode-font-lock-keywords))
+  (setq mode-name "gcode")
+
+  ;; modify the keymap
+  (define-key gcode-mode-map [remap comment-dwim] 'gcode-comment-dwim)
+
+  (modify-syntax-entry ?\( "< b" gcode-mode-syntax-table)
+  (modify-syntax-entry ?\) "> b" gcode-mode-syntax-table)
   (run-hooks 'gcode-mode-hook))
 
 (provide 'gcode)
