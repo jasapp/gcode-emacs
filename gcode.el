@@ -1,4 +1,4 @@
-  ;; gcode.el --- Major mode for editing gcode
+;; gcode.el --- Major mode for editing gcode
 ;; 
 ;; Author: Jeff Sapp <jasapp@gmail.com>
 ;;
@@ -9,8 +9,19 @@
 (defvar gcode-font-lock-keywords
   (list '("\\<\\([gmtGMT][0-9]\\{2\\}\\)\\>" . font-lock-function-name-face)
 		'("\\<\\(^[nN][0-9]+\\)\\>" . font-lock-type-face)
-		'("\\<\\([A-Z][+-]?[0-9]+\\(\\.[0-9]+\\)?\\)\\>" . font-lock-keyword-face)
+		'("\\<\\([A-Za-z][+-]?[0-9]+\\(\\.[0-9]+\\)?\\)\\>" . font-lock-keyword-face)
 		))
+
+(defun G00 () 
+  "Rapid positioning.
+
+On 2- or 3-axis moves, G00 (unlike G01) does not necessarily move in a 
+single straight line between start point and end point. It moves each 
+axis at its max speed until its vector is achieved. Shorter vector 
+usually finishes first (given similar axis speeds).")
+
+(defun G01 () "Linear interpolation")
+(defun G02 () "Circular interpolation, clockwise.")
 
 (defun gcode-comment-dwim (arg)
 "Comment or uncomment current line or region in a smart way.
@@ -44,6 +55,11 @@ For detail, see `comment-dwim'."
 	  (setq current-line-count (1+ current-line-count )))
 	(goto-char original-point)))
 
+(defun update-line-numbers () 
+  (interactive "*")
+  (remove-line-numbers)
+  (add-line-numbers))
+
 (define-derived-mode gcode-mode fundamental-mode
   "Major mode for editing gcode."
   (setq font-lock-defaults '(gcode-font-lock-keywords))
@@ -56,5 +72,8 @@ For detail, see `comment-dwim'."
   (modify-syntax-entry ?\( "< b" gcode-mode-syntax-table)
   (modify-syntax-entry ?\) "> b" gcode-mode-syntax-table)
   (run-hooks 'gcode-mode-hook))
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.gc$" . gc-mode))
 
 (provide 'gcode)

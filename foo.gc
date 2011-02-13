@@ -1,17 +1,14 @@
 ( -*- mode: gcode -*- )
-( Pi )
-# foo this is a comment Pi 
-Pi
-N1 G20
-N2 G17 G40 G80 
-( Pi this is a comment G80 )
-N3 T01 
-N4 M06 X1.0 
-N5 G90 G54 G00 X0.375 S900 M03 
-N6 T02
-N7 G43 Z1.0 H01 M08
-N8 G99 G82 R-0.4 Z-0.608 P200 F8.0
+G20
+G00
+G17 G40 G80 
+( this is a comment G80 )
+T01 
+M06 X1.0 
+G90 G54 G00 X0.375 S900 M03 
+G43 Z1.0 H01 M08
+G99 G82 R-0.4 Z-0.608 P200 F8.0
 		   Y0.74 Y1.125
-N9 G98 Y1.625
-N10 G99 X1.6875 R0.1 Z-0.258
+G98 Y1.625
+G99 X1.6875 R0.1 Z-0.258
 
