@@ -2,6 +2,11 @@
 ;; 
 ;; Author: Jeff Sapp <jasapp@gmail.com>
 ;;
+;; add feed rate changes everywhere. 
+;; change depth of cut
+;; speeds
+;; quick change of canned cycles, G82,83,84
+(require 'newcomment)
 
 (defvar gcode-mode-hook nil
   "*List of functions to call when entering GCode mode.*")
@@ -23,15 +28,6 @@ usually finishes first (given similar axis speeds).")
 (defun G01 () "Linear interpolation")
 (defun G02 () "Circular interpolation, clockwise.")
 
-(defun gcode-comment-dwim (arg)
-"Comment or uncomment current line or region in a smart way.
-For detail, see `comment-dwim'."
-   (interactive "*P")
-   (require 'newcomment)
-   (let ((deactivate-mark nil) 
-	 (comment-start "(") 
-	 (comment-end ")"))
-     (comment-dwim arg)))
 
 (defun remove-line-numbers ()
   "Remove line numbers."
@@ -66,8 +62,8 @@ For detail, see `comment-dwim'."
   (setq major-mode 'gcode-mode)
   (setq mode-name "gcode")
 
-  ;; modify the keymap
-  (define-key gcode-mode-map [remap comment-dwim] 'gcode-comment-dwim)
+  (setq comment-start "(") 
+  (setq comment-end ")")
 
   (modify-syntax-entry ?\( "< b" gcode-mode-syntax-table)
   (modify-syntax-entry ?\) "> b" gcode-mode-syntax-table)
