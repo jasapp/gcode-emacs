@@ -2,20 +2,22 @@
 ;; 
 ;; Author: Jeff Sapp <jasapp@gmail.com>
 ;;
-;; add feed rate changes everywhere. 
-;; change depth of cut
-;; speeds
-;; quick change of canned cycles, G82,83,84
 (require 'newcomment)
+(require 'cl)
 
 (defvar gcode-mode-hook nil
   "*List of functions to call when entering GCode mode.*")
 
 (defvar gcode-font-lock-keywords
-  (list '("\\<\\([gmtGMT][0-9]\\{2\\}\\)\\>" . font-lock-function-name-face)
-		'("\\<\\(^[nN][0-9]+\\)\\>" . font-lock-type-face)
-		'("\\<\\([A-Za-z][+-]?[0-9]+\\(\\.[0-9]+\\)?\\)\\>" . font-lock-keyword-face)
-		))
+  (list '("\\<\\([gmtGMT][0-9]\\{1,4\\}\\)\\>" . font-lock-function-name-face)
+	'("\\<\\(^[nN][0-9]+\\)\\>" . font-lock-type-face)
+	'("\\<\\([A-Za-z][+-]?[.]?[0-9]+\\(\\.[0-9]+\\)?\\)\\>" . font-lock-keyword-face)))
+
+(defvar args
+  (list '(G00 (x y z a b c))
+	'(G01 (x y z a b c))
+	'(G02 (x y z a b c r))
+	'(G03 (x y z a b c r))))
 
 (defun G00 () 
   "Rapid positioning.
@@ -27,7 +29,6 @@ usually finishes first (given similar axis speeds).")
 
 (defun G01 () "Linear interpolation")
 (defun G02 () "Circular interpolation, clockwise.")
-
 
 (defun remove-line-numbers ()
   "Remove line numbers."
@@ -45,7 +46,7 @@ usually finishes first (given similar axis speeds).")
   (let ((original-point (point))
 		(current-line-count 0))
 	(goto-char (point-min))
-	(while (re-search-forward "^[gmtGMT][0-9]\\{2\\}" nil t)
+	(while (re-search-forward "^[gmtGMT][0-9]\\{1,4\\}" nil t)
 	  (beginning-of-line)
 	  (insert (format "N%d " current-line-count))
 	  (setq current-line-count (+ current-line-count 5)))
@@ -55,6 +56,24 @@ usually finishes first (given similar axis speeds).")
   (interactive "*")
   (remove-line-numbers)
   (add-line-numbers))
+
+(defun gcode-commandp (str)
+  (string-match "\\<\\([gmtGMT][0-9]\\{1,4\\}\\)\\>" str))
+
+(defun gcode-argp (str)
+  (not (gcode-commandp str)))
+
+(defun list-line-commands ()
+  (interactive "*")
+  (let ((line (buffer-substring-no-properties (line-beginning-position)
+					      (line-end-position))))
+    (remove-if-not 'gcode-commandp (split-string line))))
+
+(defun display-available-arguments ()
+  "Display arguments for the commands the commands on the current line."
+  (interactive "*")
+  (let ((current-commands (list-line-commands)))
+    (mapconcat 'identity current-commands " ")))
 
 (define-derived-mode gcode-mode fundamental-mode
   "Major mode for editing gcode."

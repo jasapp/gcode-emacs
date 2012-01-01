@@ -1,0 +1,51 @@
+O0003
+
+(rough face and turn tool)
+T0101 M41
+G96 S400 M3
+G0 X2.100 Z0.005
+G1 X0.800 F.012
+G0 Z.105
+   X1.8725
+G1 Z.005
+   X1.9975 Z-0.625
+G0 X6.0 Z5.0
+M01
+
+(3/4" rough boring bar)
+T0303 M41
+G96 S350 M3
+G0 X1.315 Z0.100 M8
+G1 Z-0.245 F0.007 
+   X0.900
+G0 Z0.100
+   X6.0 Z5.0
+M1
+
+(3/4" finish boring bar)
+T0404 M42
+G96 S350 M3
+G0 X1.438 Z0.100 M8
+G1 Z0 F.005
+G2 X.1375 Z-0.063 R0.063
+G1 Z-0.250
+   X1.100
+   X1.00 Z-0.300
+   X0.900
+G0 Z0.100
+   X6.0 Z5.0
+M1
+
+(Finish face and turn tool)
+T0505 M42
+G96 S450 M3
+G0 X1.9125 Z0 M8
+G1 X1.275 F.005
+G0 Z0.100 
+   X1.8125
+G1 Z0
+   X1.9375 Z-0.625 
+   Z-0.913
+   X2.0375
+G00 X6.0 Z5.0
+M30
