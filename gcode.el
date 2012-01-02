@@ -13,11 +13,14 @@
 	'("\\<\\(^[nN][0-9]+\\)\\>" . font-lock-type-face)
 	'("\\<\\([A-Za-z][+-]?[.]?[0-9]+\\(\\.[0-9]+\\)?\\)\\>" . font-lock-keyword-face)))
 
-(defvar args
-  (list '(G00 (x y z a b c))
-	'(G01 (x y z a b c))
-	'(G02 (x y z a b c r))
-	'(G03 (x y z a b c r))))
+(defvar gcode-args
+  (list '("G0" ("X" "Y" "Z" "A" "B" "C"))
+	'("G1" ("X" "Y" "Z" "A" "B" "C"))
+	'("G2" ("X" "Y" "Z" "A" "B" "C" "R"))
+	'("G3" ("X" "Y" "Z" "A" "B" "C" "R"))))
+
+(defun args (fn-str)
+  (second (assoc fn-str gcode-args)))
 
 (defun G00 () 
   "Rapid positioning.
@@ -63,17 +66,41 @@ usually finishes first (given similar axis speeds).")
 (defun gcode-argp (str)
   (not (gcode-commandp str)))
 
+(defun split-gcode (str)
+  (let ((code-chars (mapcar 'string str)))
+    (cons (first code-chars)
+	  (mapconcat 'identity (rest code-chars) ""))))
+
+(defun list-line-args ()
+  (interactive "*")
+  (let* ((line (buffer-substring-no-properties (line-beginning-position)
+					       (line-end-position)))
+	 (line-args (remove-if 'gcode-commandp (split-string line))))
+    line-args))
+
+(defun list-line-addresses ()
+  (mapcar '(lambda (x) (first (split-gcode x))) (list-line-args)))
+
 (defun list-line-commands ()
   (interactive "*")
   (let ((line (buffer-substring-no-properties (line-beginning-position)
-					      (line-end-position))))
+					       (line-end-position))))
     (remove-if-not 'gcode-commandp (split-string line))))
 
-(defun display-available-arguments ()
+(defun available-arguments ()
   "Display arguments for the commands the commands on the current line."
+  (let* ((cmds (list-line-commands))
+	 (available (apply 'append (mapcar 'args cmds)))
+	 (current (list-line-addresses)))
+    (remove-if (lambda (x) (member x current)) available)))
+
+(defun display-available-arguments () 
   (interactive "*")
-  (let ((current-commands (list-line-commands)))
-    (mapconcat 'identity current-commands " ")))
+  (message (mapconcat 'identity (available-arguments) " ")))
+
+(defun new-space ()
+  (insert " " )
+  (display-available-arguments))
 
 (define-derived-mode gcode-mode fundamental-mode
   "Major mode for editing gcode."
@@ -84,6 +111,9 @@ usually finishes first (given similar axis speeds).")
   (setq comment-start "(") 
   (setq comment-end ")")
 
+  (setq gcode-mode-map (make-sparse-keymap))
+  (define-key gcode-mode-map (kbd "SPC") 'new-space)
+
   (modify-syntax-entry ?\( "< b" gcode-mode-syntax-table)
   (modify-syntax-entry ?\) "> b" gcode-mode-syntax-table)
   (run-hooks 'gcode-mode-hook))
@@ -91,4 +121,7 @@ usually finishes first (given similar axis speeds).")
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.gc$" . gc-mode))
 
+
 (provide 'gcode)
+
+
