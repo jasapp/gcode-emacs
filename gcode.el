@@ -119,7 +119,7 @@ usually finishes first (given similar axis speeds).")
   (run-hooks 'gcode-mode-hook))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.gc$" . gc-mode))
+(add-to-list 'auto-mode-alist '("\\.gc\\(ode\\)?$" . gcode-mode))
 
 
 (provide 'gcode)
