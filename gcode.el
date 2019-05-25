@@ -2,6 +2,8 @@
 ;; 
 ;; Author: Jeff Sapp <jasapp@gmail.com>
 ;;
+(kill-all-local-variables)
+
 (require 'newcomment)
 (require 'cl)
 
@@ -22,19 +24,8 @@
 (defun args (fn-str)
   (second (assoc fn-str gcode-args)))
 
-(defun G00 () 
-  "Rapid positioning.
-
-On 2- or 3-axis moves, G00 (unlike G01) does not necessarily move in a 
-single straight line between start point and end point. It moves each 
-axis at its max speed until its vector is achieved. Shorter vector 
-usually finishes first (given similar axis speeds).")
-
-(defun G01 () "Linear interpolation")
-(defun G02 () "Circular interpolation, clockwise.")
-
 (defun clean-returned-file ()
-  "Remove control characters returned from mach."
+  "Remove control characters returned from machine."
   (interactive "*")
   (let ((original-point (point)))
     (goto-char (point-min))
