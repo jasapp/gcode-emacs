@@ -33,32 +33,17 @@ usually finishes first (given similar axis speeds).")
 (defun G01 () "Linear interpolation")
 (defun G02 () "Circular interpolation, clockwise.")
 
-(defun remove-line-numbers ()
-  "Remove line numbers."
+(defun clean-returned-file ()
+  "Remove control characters returned from mach."
   (interactive "*")
   (let ((original-point (point)))
-	(goto-char (point-min))
-	(while (re-search-forward "^[nN][0-9]+[ \n\t]" nil t)
-	  (replace-match ""))
-	(goto-char original-point)))
-
-(defun add-line-numbers ( )
-  "Add line numbers."
-  (interactive "*")
-  (remove-line-numbers)
-  (let ((original-point (point))
-		(current-line-count 0))
-	(goto-char (point-min))
-	(while (re-search-forward "^[gmtGMT][0-9]\\{1,4\\}" nil t)
-	  (beginning-of-line)
-	  (insert (format "N%d " current-line-count))
-	  (setq current-line-count (+ current-line-count 5)))
-	(goto-char original-point)))
-
-(defun update-line-numbers () 
-  (interactive "*")
-  (remove-line-numbers)
-  (add-line-numbers))
+    (goto-char (point-min))
+    (while (re-search-forward "[\|\|\]" nil t)
+      (replace-match ""))
+    (goto-char (point-min))
+    (while (re-search-forward "\\([0-9]\\)\\([A-Za-z]\\)" nil t)
+      (replace-match "\\1 \\2"))
+    (goto-char original-point)))
 
 (defun gcode-commandp (str)
   (string-match "\\<\\([gmtGMT][0-9]\\{1,4\\}\\)\\>" str))
@@ -112,7 +97,7 @@ usually finishes first (given similar axis speeds).")
   (setq comment-end ")")
 
   (setq gcode-mode-map (make-sparse-keymap))
-  (define-key gcode-mode-map (kbd "SPC") 'new-space)
+;;  (define-key gcode-mode-map (kbd "SPC") 'new-space)
 
   (modify-syntax-entry ?\( "< b" gcode-mode-syntax-table)
   (modify-syntax-entry ?\) "> b" gcode-mode-syntax-table)
@@ -120,8 +105,6 @@ usually finishes first (given similar axis speeds).")
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.gc\\(ode\\)?$" . gcode-mode))
-
+(add-to-list 'auto-mode-alist '("\\.NC)?$" . gcode-mode))
 
 (provide 'gcode)
-
-
