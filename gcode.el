@@ -89,6 +89,8 @@
   (setq-local gcode-mode-map (make-sparse-keymap))
   ;;  (define-key gcode-mode-map (kbd "SPC") 'new-space)
 
+  (modify-syntax-entry ?\; "<" gcode-mode-syntax-table)
+  (modify-syntax-entry ?\n ">" gcode-mode-syntax-table)
   (modify-syntax-entry ?\( "< b" gcode-mode-syntax-table)
   (modify-syntax-entry ?\) "> b" gcode-mode-syntax-table)
   (run-hooks 'gcode-mode-hook))
