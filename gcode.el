@@ -97,6 +97,10 @@
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.gc\\(ode\\)?$" . gcode-mode))
+(add-to-list 'auto-mode-alist '("\\.GC\\(ODE\\)?$" . gcode-mode))
+(add-to-list 'auto-mode-alist '("\\.nc)?$" . gcode-mode))
 (add-to-list 'auto-mode-alist '("\\.NC)?$" . gcode-mode))
+(add-to-list 'auto-mode-alist '("\\.ngc)?$" . gcode-mode))
+(add-to-list 'auto-mode-alist '("\\.NGC)?$" . gcode-mode))
 
 (provide 'gcode)
