@@ -1,25 +1,24 @@
 ;; gcode.el --- Major mode for editing gcode
-;; 
+;;
 ;; Author: Jeff Sapp <jasapp@gmail.com>
 ;;
-(kill-all-local-variables)
 
 (require 'newcomment)
 (require 'cl)
 
 (defvar gcode-mode-hook nil
-  "*List of functions to call when entering GCode mode.*")
+  "List of functions to call when entering GCode mode.")
 
 (defvar gcode-font-lock-keywords
   (list '("\\<\\([gmtGMT][0-9]\\{1,4\\}\\)\\>" . font-lock-function-name-face)
-	'("\\<\\(^[nN][0-9]+\\)\\>" . font-lock-type-face)
-	'("\\<\\([A-Za-z][+-]?[.]?[0-9]+\\(\\.[0-9]+\\)?\\)\\>" . font-lock-keyword-face)))
+        '("\\<\\(^[nN][0-9]+\\)\\>" . font-lock-type-face)
+        '("\\<\\([A-Za-z][+-]?[.]?[0-9]+\\(\\.[0-9]+\\)?\\)\\>" . font-lock-keyword-face)))
 
 (defvar gcode-args
-  (list '("G0" ("X" "Y" "Z" "A" "B" "C"))
-	'("G1" ("X" "Y" "Z" "A" "B" "C"))
-	'("G2" ("X" "Y" "Z" "A" "B" "C" "R"))
-	'("G3" ("X" "Y" "Z" "A" "B" "C" "R"))))
+  (list '("G0" ("X" "Y" "Z" "A" "B" "C" "E"))
+        '("G1" ("X" "Y" "Z" "A" "B" "C" "E"))
+        '("G2" ("X" "Y" "Z" "A" "B" "C" "E" "I" "J" "R"))
+        '("G3" ("X" "Y" "Z" "A" "B" "C" "E" "I" "J" "R"))))
 
 (defun args (fn-str)
   (second (assoc fn-str gcode-args)))
