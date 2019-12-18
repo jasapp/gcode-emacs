@@ -79,15 +79,15 @@
 
 (define-derived-mode gcode-mode fundamental-mode
   "Major mode for editing gcode."
-  (setq font-lock-defaults '(gcode-font-lock-keywords))
-  (setq major-mode 'gcode-mode)
-  (setq mode-name "gcode")
+  (setq-local font-lock-defaults '(gcode-font-lock-keywords))
+  (setq-local major-mode 'gcode-mode)
+  (setq-local mode-name "gcode")
 
-  (setq comment-start "(") 
-  (setq comment-end ")")
+  (setq-local comment-start "; ")
+  (setq-local comment-end "")
 
-  (setq gcode-mode-map (make-sparse-keymap))
-;;  (define-key gcode-mode-map (kbd "SPC") 'new-space)
+  (setq-local gcode-mode-map (make-sparse-keymap))
+  ;;  (define-key gcode-mode-map (kbd "SPC") 'new-space)
 
   (modify-syntax-entry ?\( "< b" gcode-mode-syntax-table)
   (modify-syntax-entry ?\) "> b" gcode-mode-syntax-table)
