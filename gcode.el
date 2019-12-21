@@ -44,13 +44,13 @@
 (defun split-gcode (str)
   (let ((code-chars (mapcar 'string str)))
     (cons (first code-chars)
-	  (mapconcat 'identity (rest code-chars) ""))))
+          (mapconcat 'identity (rest code-chars) ""))))
 
 (defun list-line-args ()
   (interactive "*")
   (let* ((line (buffer-substring-no-properties (line-beginning-position)
-					       (line-end-position)))
-	 (line-args (remove-if 'gcode-commandp (split-string line))))
+                                               (line-end-position)))
+         (line-args (remove-if 'gcode-commandp (split-string line))))
     line-args))
 
 (defun list-line-addresses ()
@@ -59,17 +59,17 @@
 (defun list-line-commands ()
   (interactive "*")
   (let ((line (buffer-substring-no-properties (line-beginning-position)
-					       (line-end-position))))
+                                               (line-end-position))))
     (remove-if-not 'gcode-commandp (split-string line))))
 
 (defun available-arguments ()
   "Display arguments for the commands the commands on the current line."
   (let* ((cmds (list-line-commands))
-	 (available (apply 'append (mapcar 'args cmds)))
-	 (current (list-line-addresses)))
+         (available (apply 'append (mapcar 'args cmds)))
+         (current (list-line-addresses)))
     (remove-if (lambda (x) (member x current)) available)))
 
-(defun display-available-arguments () 
+(defun display-available-arguments ()
   (interactive "*")
   (message (mapconcat 'identity (available-arguments) " ")))
 
@@ -79,6 +79,7 @@
 
 (define-derived-mode gcode-mode fundamental-mode
   "Major mode for editing gcode."
+  (kill-all-local-variables)
   (setq-local font-lock-defaults '(gcode-font-lock-keywords))
   (setq-local major-mode 'gcode-mode)
   (setq-local mode-name "gcode")
