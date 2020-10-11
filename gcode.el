@@ -54,12 +54,12 @@
     line-args))
 
 (defun list-line-addresses ()
-  (mapcar '(lambda (x) (first (split-gcode x))) (list-line-args)))
+  (mapcar (lambda (x) (first (split-gcode x))) (list-line-args)))
 
 (defun list-line-commands ()
   (interactive "*")
   (let ((line (buffer-substring-no-properties (line-beginning-position)
-                                               (line-end-position))))
+                                              (line-end-position))))
     (remove-if-not 'gcode-commandp (split-string line))))
 
 (defun available-arguments ()
@@ -77,23 +77,22 @@
   (insert " " )
   (display-available-arguments))
 
+(defvar gcode-mode-syntax-table (let ((st (make-syntax-table)))
+                                  (modify-syntax-entry ?\; "<" st)
+                                  (modify-syntax-entry ?\n ">" st)
+                                  (modify-syntax-entry ?\( "< b" st)
+                                  (modify-syntax-entry ?\) "> b" st)
+                                  st))
+
 (define-derived-mode gcode-mode fundamental-mode
   "Major mode for editing gcode."
   (kill-all-local-variables)
   (setq-local font-lock-defaults '(gcode-font-lock-keywords))
   (setq-local major-mode 'gcode-mode)
   (setq-local mode-name "gcode")
-
   (setq-local comment-start "; ")
   (setq-local comment-end "")
-
-  (setq-local gcode-mode-map (make-sparse-keymap))
-  ;;  (define-key gcode-mode-map (kbd "SPC") 'new-space)
-
-  (modify-syntax-entry ?\; "<" gcode-mode-syntax-table)
-  (modify-syntax-entry ?\n ">" gcode-mode-syntax-table)
-  (modify-syntax-entry ?\( "< b" gcode-mode-syntax-table)
-  (modify-syntax-entry ?\) "> b" gcode-mode-syntax-table)
+  (set-syntax-table gcode-mode-syntax-table)
   (run-hooks 'gcode-mode-hook))
 
 ;;;###autoload
